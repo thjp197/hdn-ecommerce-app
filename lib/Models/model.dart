@@ -36,6 +36,7 @@ List<AppModel> fashionEcommerceApp = [
     size: ["XS", "S", "M"],
     description: "",
   ),
+
   //id 2
   AppModel(
     name: "Slim Fit Cotton Shirt",
