@@ -14,7 +14,6 @@ class AddItems extends ConsumerWidget {
   final TextEditingController _discountpercentageController = TextEditingController();
 
   AddItems({super.key});
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(addItemProvider);
