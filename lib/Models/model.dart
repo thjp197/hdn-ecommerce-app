@@ -297,5 +297,7 @@ List<AppModel> fashionEcommerceApp = [
     description: "",
   ),
 ];
+
+
 const myDescription1 = "Elevate your casual wardrobe with our";
 const myDescription2 = " .Crafted from premium cotton for maximum comfort, this relaxed-fit tee feature";

@@ -3,6 +3,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:myecommerceapp/Models/category_model.dart';
 import 'package:myecommerceapp/Models/model.dart';
 import 'package:myecommerceapp/Utils/colors.dart';
+import 'package:myecommerceapp/View/category_items.dart';
 import 'package:myecommerceapp/View/items_detail_screen.dart';
 import 'package:myecommerceapp/Widgets/banner.dart';
 import 'package:myecommerceapp/Widgets/curated_items.dart';
@@ -98,6 +99,22 @@ class _AppHomeScreenState extends State<AppHomeScreen> {
                   category.length,
                       (index) =>
                       InkWell(
+                        onTap: () {
+                          //filter products based on selecting category
+                          final filterItems = fashionEcommerceApp
+                              .where(
+                                (item) =>
+                            item.category.toLowerCase() ==
+                                category[index].name.toLowerCase(),
+                          )
+                              .toList();
+                          //Navigate to the categoryItems screen with the filtered list
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (_) =>
+                                CategoryItems(category: category[index].name,
+                                    categoryItems: filterItems),),
+                          );
+                        },
                         child: Column(
                           children: [
                             Container(
@@ -156,11 +173,14 @@ class _AppHomeScreenState extends State<AppHomeScreen> {
                         : const EdgeInsets.only(right: 20),
                     child: InkWell(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (_) =>
-                              ItemsDetailScreen(
-                                eCommerceApp: eCommerceItems,
-                              ),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (_) =>
+                                ItemsDetailScreen(
+                                  eCommerceApp: eCommerceItems,
+                                ),
                           ),
                         );
                       },

@@ -26,3 +26,12 @@ List<Category> category = [
     image: "asssets/baby.png",
   ),
 ];
+
+List<String> filterCategory = [
+  "Filter",
+  "Ratings",
+  "Size",
+  "Color",
+  "Price",
+  "Brand",
+];

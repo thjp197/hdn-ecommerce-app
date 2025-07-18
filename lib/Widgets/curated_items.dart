@@ -17,25 +17,28 @@ class CuratedItems extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: fbackgroundColor2,
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              image: AssetImage(eCommerceItems.image),
+        Hero(
+          tag: eCommerceItems.image,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: fbackgroundColor2,
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: AssetImage(eCommerceItems.image),
+              ),
             ),
-          ),
-          height: size.height * 0.25,
-          width: size.width * 0.5,
-          child: const Padding(
-            padding: EdgeInsets.all(12),
-            child: Align(
-              alignment: Alignment.topRight,
-              child: CircleAvatar(
-                radius: 18,
-                backgroundColor: Colors.black26,
-                child: Icon(Icons.favorite_border, color: Colors.white),
+            height: size.height * 0.25,
+            width: size.width * 0.5,
+            child: const Padding(
+              padding: EdgeInsets.all(12),
+              child: Align(
+                alignment: Alignment.topRight,
+                child: CircleAvatar(
+                  radius: 18,
+                  backgroundColor: Colors.black26,
+                  child: Icon(Icons.favorite_border, color: Colors.white),
+                ),
               ),
             ),
           ),
