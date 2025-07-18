@@ -14,7 +14,7 @@ final addItemProvider = StateNotifierProvider<AddItemNotifier, AddItemState>((
 
 class AddItemNotifier extends StateNotifier<AddItemState> {
   AddItemNotifier() : super(AddItemState()) {
-    // fetchCategory();
+    fetchCategory();
   }
 
   //for stroring the all the items on this collection
