@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:untitled2/User%20Activity/Provider/cart_provider.dart';
 import '../Provider/cart_provider.dart';
+import '../Utils/colors.dart';
+import '../Widget/show_snackbar.dart';
 
 // import thu vien chua color.dart, cart_provider
 class CartScreen extends ConsumerStatefulWidget {
@@ -12,6 +14,10 @@ class CartScreen extends ConsumerStatefulWidget {
 }
 
 class _CartScreenState extends ConsumerState<CartScreen> {
+  String? selectedPaymentMethodId; // to track selected payment method id
+  double? selectedPaymentBalance; // to track selected payment method balance
+  TextEditingController addressController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final cp = ref.watch(cartService);
@@ -21,7 +27,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       appBar: AppBar(
         backgroundColor: fbackgroundColor1,
         elevation: 0,
-        title:const Text(
+        //  leading: Icon(),
+        title: const Text(
           "My Cart",
           style: TextStyle(
             color: Colors.black,
@@ -29,24 +36,250 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             fontSize: 22,
           ),
         ),
+        centerTitle: true,
       ),
       body: Column(
         children: [
-          Expanded(child: carts.isNotEmpty? ListView.builder(
-            itemCount: carts.length,
-            physics: const BouncingScrollPhysics(),
-            itemBuilder: (context, index){
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: GestureDetector(onTap: () {},
+          Expanded(
+            child: carts.isNotEmpty
+                ? ListView.builder(
+              itemCount: carts.length,
+              physics: const BouncingScrollPhysics(),
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16, vertical: 8),
+                  child: GestureDetector(
+                    onTap: () {},
+                    onLongPress: () {
+                      cp.deleteCartItem(carts[index].productId);
+                    },
+                    child: CartItems(
+                      cart: carts[index],
+                    ),
+                  ),
+                );
+              },
+            )
+                : Center(
+              child: Text(
+                "Your cart is empty!",
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            );
-          },):Center(child: Text("Your cart is empty!",style: TextStyle(color: Colors.grey.shade600, fontSize: 18, fontWeight: FontWeight.w500,),
+            ),
           ),
-          )
-          ),
+          // For total cart summary
+          if (carts.isNotEmpty) _buildSummarySection(context, cp)
         ],
-      )
+      ),
+    );
+  }
+
+  Widget _buildSummarySection(BuildContext context, CartProvider cp) {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+      child: Column(
+        children: [
+          const Row(
+            children: [
+              Text(
+                "Delivery",
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(width: 10),
+              Expanded(child: DottedLine()),
+              SizedBox(width: 10),
+              Text(
+                "\$4.99",
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: -1,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              const Text(
+                "Total Order",
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(width: 10),
+              const Expanded(child: DottedLine()),
+              const SizedBox(width: 10),
+              Text(
+                "\$${(cp.totalCart()).toStringAsFixed(2)}",
+                style: const TextStyle(
+                  color: Colors.redAccent,
+                  fontSize: 22,
+                  letterSpacing: -1,
+                  fontWeight: FontWeight.w600,
+                ),
+              )
+            ],
+          ),
+          const SizedBox(height: 40),
+          MaterialButton(
+            color: Colors.black,
+            height: 70,
+            minWidth: MediaQuery.of(context).size.width - 50,
+            shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            onPressed: () {
+              _showOrderConfirmationDialog(context, cp);
+            },
+            child: Text(
+              "Pay \$${((cp.totalCart() + 4.99).toStringAsFixed(2))}",
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  void _showOrderConfirmationDialog(BuildContext context, CartProvider cp) {
+    String? addressError;
+    showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, setDialogState) {
+            return AlertDialog(
+              title: const Text("Confirm Your Order"),
+              content: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    ListBody(
+                      children: cp.carts.map((cartItem) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                "${cartItem.productData['name']} x ${cartItem.quantity}")
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                    Text(
+                        "Total Payable Price: \$${(cp.totalCart() + 4.99).toStringAsFixed(2)}"),
+                    // to display the list of available payment method
+                    const SizedBox(height: 10),
+                    const Text(
+                      "Select Payment Method",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    PaymentMethodList(
+                      selectedPaymentMethodId: selectedPaymentMethodId,
+                      selectedPaymentBalance: selectedPaymentBalance,
+                      finalAmount: cp.totalCart() + 4.99,
+                      onPaymentMethodSelected: (p0, p1) {
+                        setDialogState(() {
+                          selectedPaymentMethodId = p0;
+                          selectedPaymentBalance = p1;
+                        });
+                      },
+                    ),
+                    // to add the address
+                    const Text(
+                      "Add your Delivery Address",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                      ),
+                    ),
+                    TextField(
+                      controller: addressController,
+                      decoration: InputDecoration(
+                        hintText: "Enter your address",
+                        errorText: addressError,
+                        border: const OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    // let's validate a conform button
+                    if (selectedPaymentMethodId == null) {
+                      showSnackBar(context, "Please select a payment method!");
+                    } else if (selectedPaymentBalance! <
+                        cp.totalCart() + 4.99) {
+                      showSnackBar(context,
+                          "Insufficient balance in selected payment method!");
+                    } else if (addressController.text.length < 8) {
+                      setDialogState(() {
+                        addressError =
+                        "Your address must be reflect your address identity";
+                      });
+                    } else {
+                      _saveOrder(cp, context);
+                    }
+                  },
+                  child: const Text("Confirm"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Cancel"),
+                )
+              ],
+            );
+          });
+        });
+  }
+
+  Future<void> _saveOrder(CartProvider cp, context) async {
+    final userId =
+        FirebaseAuth.instance.currentUser?.uid; // get user current id
+    if (userId == null) {
+      showSnackBar(context, "You need to be logged in to place an order.");
+      return;
+    }
+    // save order to firestore
+    await cp.saveOrder(
+      userId,
+      context,
+      selectedPaymentMethodId,
+      cp.totalCart() + 4.99,
+      addressController.text,
+    );
+    showSnackBar(context, "Order placed successfully!");
+    // we well navigate to this screen after order place is successfully
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const MyOrderScreen(),
+      ),
     );
   }
 }
