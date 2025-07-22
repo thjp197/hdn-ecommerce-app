@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../Provider/cart_provider.dart';
 import '../Utils/colors.dart';
 import '../Widget/show_snackbar.dart';
+import 'cart_items.dart';
 
-// import thu vien chua color.dart, cart_provider
 class CartScreen extends ConsumerStatefulWidget {
   const CartScreen({super.key});
 
@@ -14,8 +14,8 @@ class CartScreen extends ConsumerStatefulWidget {
 }
 
 class _CartScreenState extends ConsumerState<CartScreen> {
-  String? selectedPaymentMethodId; // to track selected payment method id
-  double? selectedPaymentBalance; // to track selected payment method balance
+  String? selectedPaymentMethodId;
+  double? selectedPaymentBalance;
   TextEditingController addressController = TextEditingController();
 
   @override
@@ -184,7 +184,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     ),
                     Text(
                         "Total Payable Price: \$${(cp.totalCart() + 4.99).toStringAsFixed(2)}"),
-                    // to display the list of available payment method
                     const SizedBox(height: 10),
                     const Text(
                       "Select Payment Method",
@@ -228,7 +227,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
               actions: [
                 TextButton(
                   onPressed: () {
-                    // let's validate a conform button
                     if (selectedPaymentMethodId == null) {
                       showSnackBar(context, "Please select a payment method!");
                     } else if (selectedPaymentBalance! <
@@ -265,7 +263,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       showSnackBar(context, "You need to be logged in to place an order.");
       return;
     }
-    // save order to firestore
     await cp.saveOrder(
       userId,
       context,
@@ -274,7 +271,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       addressController.text,
     );
     showSnackBar(context, "Order placed successfully!");
-    // we well navigate to this screen after order place is successfully
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
