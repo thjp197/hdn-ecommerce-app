@@ -193,6 +193,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                       ),
                     ),
                     const SizedBox(height: 10),
+                    // chua sua
                     PaymentMethodList(
                       selectedPaymentMethodId: selectedPaymentMethodId,
                       selectedPaymentBalance: selectedPaymentBalance,
@@ -263,6 +264,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       showSnackBar(context, "You need to be logged in to place an order.");
       return;
     }
+    // chua sua
     await cp.saveOrder(
       userId,
       context,
