@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../Widget/show_snackbar.dart';
+import '../../../../Widget/show_snackbar.dart';
 import 'add_payment.dart';
 
 class PaymentScreen extends StatefulWidget {

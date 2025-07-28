@@ -5,8 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-import '../../Widget/my_button.dart';
-import '../../Widget/show_snackbar.dart';
+import '../../../../Widget/my_button.dart';
+import '../../../../Widget/show_snackbar.dart';
+
 
 class AddPaymentMethod extends StatefulWidget {
   const AddPaymentMethod({super.key});
