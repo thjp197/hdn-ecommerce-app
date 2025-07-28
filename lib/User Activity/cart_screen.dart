@@ -138,7 +138,10 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           MaterialButton(
             color: Colors.black,
             height: 70,
-            minWidth: MediaQuery.of(context).size.width - 50,
+            minWidth: MediaQuery
+                .of(context)
+                .size
+                .width - 50,
             shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             onPressed: () {
@@ -177,13 +180,15 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                                "${cartItem.productData['name']} x ${cartItem.quantity}")
+                                "${cartItem.productData['name']} x ${cartItem
+                                    .quantity}")
                           ],
                         );
                       }).toList(),
                     ),
                     Text(
-                        "Total Payable Price: \$${(cp.totalCart() + 4.99).toStringAsFixed(2)}"),
+                        "Total Payable Price: \$${(cp.totalCart() + 4.99)
+                            .toStringAsFixed(2)}"),
                     const SizedBox(height: 10),
                     const Text(
                       "Select Payment Method",
