@@ -123,7 +123,7 @@ class _PaymentMethodListState extends State<PaymentMethodList> {
           ),
         if (balance < finalAmount)
           const Text(
-            "Insufficent Balance",
+            "Insufficient Balance",
             style: TextStyle(color: Colors.red),
           )
       ],
