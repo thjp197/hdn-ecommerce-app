@@ -2,9 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:myecommerceapp/View/Role_based_login/Admin/Screen/admin_home_screen.dart';
-import 'package:myecommerceapp/View/Role_based_login/User/app_main_screen.dart';
-import 'package:myecommerceapp/View/Role_based_login/login_screen.dart';
+import 'package:myecommerceapp/Views/Role_based_login/Admin/Screen/admin_home_screen.dart';
+import 'package:myecommerceapp/Views/Role_based_login/User/Screen/user_app_home_screen.dart';
+import 'package:myecommerceapp/Views/Role_based_login/User/Screen/user_app_main_screen.dart';
+import 'package:myecommerceapp/Views/Role_based_login/login_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
@@ -79,6 +80,8 @@ class _AuthStateHandlerState extends State<AuthStateHandler> {
       return Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     //for keep user login
-    return _userRole == "Admin" ? AdminHomeScreen() : AppMainScreen();
+    return _userRole == "Admin" ? AdminHomeScreen() : LoginScreen() ;
+
+  //    AdminHomeScreen()  UserAppMainScreen()
   }
 }
